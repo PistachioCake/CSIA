@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Vim swap files
+*.swp
+
 # C extensions
 *.so
 
@@ -105,6 +108,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# VSCode project settings
+.vscode
 
 # Spyder project settings
 .spyderproject
