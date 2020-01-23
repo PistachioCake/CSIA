@@ -1,0 +1,11 @@
+<html>
+	<head>
+		<title>{% if title %}{{ title }} - CSIA{% else %}CSIA{% endif %}</title>
+	</head>
+	<body>
+		<div>CSIA: <a href="/index">Home</a></div>
+		<hr>
+		{% block content %}{% endblock %}
+	</body>
+</html>
+
