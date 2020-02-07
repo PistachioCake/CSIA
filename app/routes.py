@@ -11,6 +11,6 @@ def index():
 def forms():
     form = SchoolForm()
     if form.validate_on_submit():
-        flash(f'School inputted: School name {form.school_name}, with {form.no_of_teams} number of teams.')
+        flash(f'School inputted: School name {form.school_name.data}, with {form.no_of_teams.data} number of teams.')
         return redirect(url_for('index'))
     return render_template("forms.html", title="School Input", form=form)
