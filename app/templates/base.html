@@ -1,21 +1,34 @@
-<html>
-	<head>
-		<title>{% if title %}{{ title }} - CSIA{% else %}CSIA{% endif %}</title>
-	</head>
-	<body>
-		<div>CSIA: 
-			<a href="{{ url_for('index') }}">Home</a> | 
-			<a href="{{ url_for('forms') }}">Forms</a>
-		</div>
-		<hr>
-		{% with messages = get_flashed_messages() %}
-		{% if messages %}<ul>
-			{% for message in messages %}
-			<li>{{ message}}</li>
-			{% endfor %}
-		</ul>{% endif %}
-		{% endwith %}
-		{% block content %}{% endblock %}
-	</body>
-</html>
+{% extends 'bootstrap/base.html' %}
 
+{% block title %}
+	{% if title %}{{ title }} - CSIA{% else %}CSIA{% endif %}
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="#">CSIA</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+	    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+    </ul>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {# application content needs to be provided in the app_content block #}
+        {% block app_content %}{% endblock %}
+    </div>
+{% endblock %}
