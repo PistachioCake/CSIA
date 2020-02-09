@@ -1,16 +1,15 @@
 from flask import render_template, flash, redirect, url_for
 from app import app
-from app.forms import SchoolForm
 
 @app.route('/')
 @app.route('/index')
 def index():
     return render_template("index.html", title="Home")
 
-@app.route('/forms', methods=['GET', 'POST'])
-def forms():
-    form = SchoolForm()
-    if form.validate_on_submit():
-        flash(f'School inputted: School name {form.school_name.data}, with {form.no_of_teams.data} number of teams.')
-        return redirect(url_for('index'))
-    return render_template("forms.html", title="School Input", form=form)
+@app.route('/teams')
+def teams():
+    return render_template("teams.html", title="Teams", page_name="Teams")
+
+@app.route('/admins')
+def admins():
+    return render_template("admins.html", title="Admins", page_name="Admins")
