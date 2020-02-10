@@ -4,6 +4,6 @@ from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
 app.config.from_object(Config)
-ootstrap = Bootstrap(app)
+bootstrap = Bootstrap(app)
 
 from app import routes
