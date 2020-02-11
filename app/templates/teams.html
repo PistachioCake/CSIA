@@ -1,5 +1,23 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
-	<h1>Teams</h1>
+<h1>Teams</h1>
+<!--{{ wtf.quick_form(form, form_type="inline") }}-->
+<form class="form" method="POST">
+	{{ form.hidden_tag() }}
+	{{ wtf.form_errors(form, hiddens="only") }}
+	<div class="form-row">
+		<div class="col-md-9 col-12">
+			{{ wtf.form_field(form.school_name, form_type="inline", placeholder="School Name") }}
+		</div>
+		<div class="col">
+			{{ wtf.form_field(form.no_of_teams, form_type="inline", placeholder="#") }}
+		</div>
+		<div class="col">
+			{{ wtf.form_field(form.submit) }}
+		</div>
+	</div>
+</form>
+
 {% endblock %}
