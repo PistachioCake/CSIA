@@ -1,6 +1,30 @@
 {% extends "base.html" %}
 {% import 'bootstrap/wtf.html' as wtf %}
 
+{% macro render_team(team) %}
+	<p>Team &quot;{{ team.name }}&quot; with password &quot;{{ team.password }}&quot;</p>
+{% endmacro %}
+
+{% macro render_school(school) %}
+	<div class="card">
+		<div class="card-header">
+			<div class="row">
+				<div class="col-md-9 col-12">{{ school.name }}</div>
+				<div class="col">{{ school.teams|length }}</div>
+				<div class="col"><button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#{{ 'collapsible' + school.name|replace(' ', '_') }}" aria-expanded="false" aria-controls="{{ school.name + 'collapsible' }}">&lt;</button></div>
+			</div>
+		</div>
+		<div class="collapse {{ 'collapsible' + school.name|replace(' ', '_') }}" id="{{ 'collapsible' + school.name|replace(' ', '_') }}">
+			<div class="card-body">
+				{% for team in school.teams %}
+				{{ render_team(team) }}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+{% endmacro %}
+
+
 {% block app_content %}
 <h1>Teams</h1>
 <!--{{ wtf.quick_form(form, form_type="inline") }}-->
@@ -21,56 +45,7 @@
 </form>
 
 {% for school in competition %}
-<div class="card">
-	<div class="card-header">
-		<div class="row">
-			<div class="col-md-9 col-12">{{ school.name }}</div>
-			<div class="col">{{ school.teams|length }}</div>
-			<div class="col"><button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#{{ 'collapsible' + school.name|replace(' ', '_') }}" aria-expanded="false" aria-controls="{{ school.name + 'collapsible' }}">&lt;</button></div>
-		</div>
-	</div>
-	<div class="collapse {{ 'collapsible' + school.name|replace(' ', '_') }}" id="{{ 'collapsible' + school.name|replace(' ', '_') }}">
-		<div class="card-body">
-			{% for team in school.teams %}
-			<p>Team &quot;{{ team.name }}&quot; with password &quot;{{ team.password }}&quot;</p>
-			{% endfor %}
-		</div>
-	</div>
-</div>
+{{ render_school(school) }}
 {% endfor %}
-
-<br />
-<hr />
-<br />
-
-<table class="table table-striped table-hover">
-	<thead>
-		<tr>
-			<th class="col-md-1"></th>
-			<th class="col-md-9">School Name</th>
-			<th class="col-md-2">#</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for school in competition %}
-		<tr>
-			<td><button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#{{ 'tableCollapsible' + school.name|replace(' ', '_') }}" aria-expanded="false" aria-controls="{{ school.name + 'collapsible' }}">&gt;</button></td>
-			<td>{{ school.name }}</td>
-			<td>{{ school.teams|length }}</td>
-		</tr>
-		<tr class="collapse {{ 'tableCollapsible' + school.name|replace(' ', '_') }}" id="{{ 'tableCollapsible' + school.name|replace(' ', '_') }}"><td colspan=3>
-		<table>
-			{% for team in school.teams %}
-				<tr>
-					<td>|</td>
-					<td>{{ team.name }}</td>
-					<td>{{ team.password }}</td>
-				</tr>
-			{% endfor %}
-		</table>
-		</td></tr>
-		{% endfor %}
-	</tbody>
-</table>
 
 {% endblock %}
