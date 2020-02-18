@@ -15,7 +15,10 @@ def teams():
     form = SchoolForm()
     if form.validate_on_submit():
         flash(f'School inputted: School name {form.school_name.data}, with {form.no_of_teams.data} number of teams.')
-        return redirect(url_for('index'))
+        school = models.School(name=form.school_name.data)
+        for i in range(form.no_of_teams.data):
+            school.teams.append(models.Team(name=f"{form.school_name.data} #{i}", password="foobar"))
+        comp1.schools.append(school)
     return render_template("teams.html", title="Teams", competition=comp1, form=form)
 
 @app.route('/admins')
