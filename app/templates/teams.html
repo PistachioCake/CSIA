@@ -2,7 +2,21 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% macro render_team(team) %}
-	<p>Team &quot;{{ team.name }}&quot; with password &quot;{{ team.password }}&quot;</p>
+	<tr>
+		<td>
+			{{ team.name }}
+		</td>
+		<td class="d-none d-sm-table-cell">
+			---
+		</td>
+		<td>
+			{{ team.password }}
+		</td>
+		<td>
+			<button class="btn btn-warning btn-sm" type="button">Edit</button>
+			<button class="btn btn-danger btn-sm" type="button">Delete</button>
+		</td>
+	</tr>
 {% endmacro %}
 
 {% macro render_school(school) %}
@@ -10,15 +24,27 @@
 		<div class="card-header">
 			<div class="row">
 				<div class="col-md-9 col-12">{{ school.name }}</div>
-				<div class="col">{{ school.teams|length }}</div>
+				<div class="col">{{ school.teams.all()|length }}</div>
 				<div class="col"><button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#{{ 'collapsible' + school.name|replace(' ', '_') }}" aria-expanded="false" aria-controls="{{ school.name + 'collapsible' }}">&lt;</button></div>
 			</div>
 		</div>
 		<div class="collapse {{ 'collapsible' + school.name|replace(' ', '_') }}" id="{{ 'collapsible' + school.name|replace(' ', '_') }}">
 			<div class="card-body">
-				{% for team in school.teams %}
-				{{ render_team(team) }}
-				{% endfor %}
+				<table class="table">
+					<thead>
+						<tr>
+							<th class="col-3">Team Name</th>
+							<th class="col-3 d-none d-sm-table-cell">Account Name</th>
+							<th class="col-3">Password</th>
+							<th class="col-3">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for team in school.teams.all() %}
+						{{ render_team(team) }}
+						{% endfor %}
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -39,12 +65,21 @@
 			{{ wtf.form_field(form.no_of_teams, form_type="inline", placeholder="#") }}
 		</div>
 		<div class="col">
-			{{ wtf.form_field(form.submit, form_type="inline") }}
+			{{ wtf.form_field(form.submit, form_type="inline", class="btn btn-primary btn-block") }}
 		</div>
 	</div>
 </form>
 
-{% for school in competition %}
+<div class="card">
+	<div class="card-header">
+		<div class="row">
+			<div class="col-md-9 col-12">School Name</div>
+			<div class="col">#</div>
+			<div class="col"></div>
+		</div>
+	</div>
+</div>
+{% for school in competition.schools.all() %}
 {{ render_school(school) }}
 {% endfor %}
 

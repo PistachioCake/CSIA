@@ -1,35 +1,9 @@
 from flask import render_template, flash, redirect, url_for
 from app import app
 from app.forms import SchoolForm
+import app.models as models
 
-from collections import namedtuple
-
-Team = namedtuple('Team', ['name', 'password'])
-School = namedtuple('School', ['name', 'teams'])
-comp1 = [
-    School("Westwood", [
-        Team("Westwood #1", "never"),
-        Team("Westwood #2", "gonna"),
-        Team("Westwood #3", "give-"),
-        Team("Westwood #4", "youup"),
-    ]),
-    School("West Lake", [
-        Team("West Lake #1", "never"),
-        Team("West Lake #2", "gonna"),
-        Team("West Lake #3", "let--"),
-        Team("West Lake #4", "you--"),
-        Team("West Lake #5", "down-"),
-    ]),
-    School("Cedar Park", [
-        Team("Cedar Park #1", "never"),
-        Team("Cedar Park #2", "gonna"),
-        Team("Cedar Park #3", "run--"),
-        Team("Cedar Park #4", "aroun"),
-        Team("Cedar Park #5", "d-and"),
-        Team("Cedar Park #6", "deser"),
-        Team("Cedar Park #7", "t-you"),
-    ]),
-]
+comp1 = models.Competition.query.filter_by(name="comp1").first()
 
 @app.route('/')
 @app.route('/index')
