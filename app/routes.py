@@ -45,6 +45,12 @@ def teams():
             flash(f'Unable to update team.')
             flash(f'{edit_team_form.errors}')
 
+    if edit_team_form.submit_delete.data and edit_team_form.is_submitted():
+            team = models.Team.query.get(edit_team_form.team_id.data)
+            flash(f'Team {team.name} deleted.')
+            db.session.delete(team)
+            db.session.commit()
+
     return render_template("teams.html", title="Teams", competition=comp1, add_school_form=add_school_form, edit_team_form=edit_team_form)
 
 @app.route('/admins')

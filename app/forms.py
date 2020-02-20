@@ -12,7 +12,8 @@ class EditTeamForm(FlaskForm):
     team_id = IntegerField('Team ID', id="team-id", validators=[DataRequired()])
     team_name = StringField('Team Name', id="team-name") # Should only be used to display stuff, not as an actual input mechanism
     password = StringField('Password', id="team-password", validators=[DataRequired(), Length(min=5)])
-    submit_password = SubmitField('Update Team')
+    submit_password = SubmitField('Update Team', default="update")
+    submit_delete = SubmitField('Delete Team', default="delete")
 
     def __init__(self, *args, **kwargs):
         super(EditTeamForm, self).__init__(*args, **kwargs)
