@@ -86,6 +86,10 @@ db.sqlite3-journal
 instance/
 .webassets-cache
 
+#   SQLAlchemy files
+app.db
+app.db-journal
+
 # Scrapy stuff:
 .scrapy
 
