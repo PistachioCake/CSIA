@@ -13,8 +13,8 @@
 			{{ team.password }}
 		</td>
 		<td>
-			<button class="btn btn-warning btn-sm" type="button">Edit</button>
-			<button class="btn btn-danger btn-sm" type="button">Delete</button>
+			<button class="btn btn-warning btn-sm" type="button" data-toggle="modal" data-target="#editModal" data-teamid="{{ team.id }}" data-teamname="{{ team.name }}" data-teampassword="{{ team.password }}">Edit</button>
+			<!-- TODO: Delete button -->
 		</td>
 	</tr>
 {% endmacro %}
@@ -25,6 +25,7 @@
 			<div class="row">
 				<div class="col-md-9 col-12">{{ school.name }}</div>
 				<div class="col">{{ school.teams.all()|length }}</div>
+				<!-- TODO: Make this toggle to a v or something when open -->
 				<div class="col"><button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#{{ 'collapsible' + school.name|replace(' ', '_') }}" aria-expanded="false" aria-controls="{{ school.name + 'collapsible' }}">&lt;</button></div>
 			</div>
 		</div>
@@ -53,19 +54,18 @@
 
 {% block app_content %}
 <h1>Teams</h1>
-<!--{{ wtf.quick_form(form, form_type="inline") }}-->
 <form class="form" method="POST">
-	{{ form.hidden_tag() }}
-	{{ wtf.form_errors(form, hiddens="only") }}
+	{{ add_school_form.hidden_tag() }}
+	{{ wtf.form_errors(add_school_form, hiddens="only") }}
 	<div class="form-row">
 		<div class="col-md-9 col-12">
-			{{ wtf.form_field(form.school_name, form_type="inline", placeholder="School Name") }}
+			{{ wtf.form_field(add_school_form.school_name, form_type="inline", placeholder="School Name") }}
 		</div>
 		<div class="col">
-			{{ wtf.form_field(form.no_of_teams, form_type="inline", placeholder="#") }}
+			{{ wtf.form_field(add_school_form.no_of_teams, form_type="inline", placeholder="#") }}
 		</div>
 		<div class="col">
-			{{ wtf.form_field(form.submit, form_type="inline", class="btn btn-primary btn-block") }}
+			{{ wtf.form_field(add_school_form.submit_school, form_type="inline", extra_class="btn-block") }}
 		</div>
 	</div>
 </form>
@@ -75,7 +75,7 @@
 		<div class="row">
 			<div class="col-md-9 col-12">School Name</div>
 			<div class="col">#</div>
-			<div class="col"></div>
+			<div class="col"><!-- TODO: Add a "collapse all" button --></div>
 		</div>
 	</div>
 </div>
@@ -83,4 +83,46 @@
 {{ render_school(school) }}
 {% endfor %}
 
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="editModalLabel">Edit Team</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form class="form" method="POST">
+					{{ edit_team_form.hidden_tag() }}
+					{{ edit_team_form.team_id(type="hidden") }}
+					<div class="form-group">
+						{{ wtf.form_field(edit_team_form.team_name) }} 
+						{{ wtf.form_field(edit_team_form.password, placeholder="Password") }}
+						{{ wtf.form_field(edit_team_form.submit_password) }}
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+	$('#editModal').on('show.bs.modal', function (event) {
+		var modal = $(this)
+		var button = $(event.relatedTarget) // Button that triggered the modal
+		// Populate the modal itself
+		var teamid = button.data('teamid')
+		var teamname = button.data('teamname')
+		var teampassword = button.data('teampassword')
+		modal.find('.modal-title').text('Edit Team "' + teamname + '"')
+		modal.find('#team-id').val(teamid)
+		modal.find('#team-name').val(teamname)
+		modal.find('#team-password').val(teampassword)
+	})
+</script>
 {% endblock %}

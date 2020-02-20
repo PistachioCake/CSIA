@@ -6,7 +6,7 @@ from app import db
 class Competition(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True, unique=True)
-    schools = db.relationship('School', backref='competition name', lazy='dynamic')
+    schools = db.relationship('School', backref='competition', lazy='dynamic')
 
     def __repr__(self):
         return f"<Competition {self.name} with {len(self.schools.all())} schools>"
@@ -14,7 +14,7 @@ class Competition(db.Model):
 class School(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True, unique=True)
-    teams = db.relationship('Team', backref='school name', lazy='dynamic')
+    teams = db.relationship('Team', backref='school', lazy='dynamic')
     competition_id = db.Column(db.Integer, db.ForeignKey('competition.id'))
 
     def __repr__(self):
