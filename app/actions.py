@@ -30,7 +30,7 @@ def add_school(competition, name, no_of_teams):
     db.session.add(school)
     for i in range(no_of_teams):
         # Create a team associated with the school
-        team = models.Team(name=f"{name} #{i}", password="foobar", school=school)
+        team = models.Team(name=f"{name} #{i+1}", password="foobar", school=school)
         # Add this team to the database
         db.session.add(team)
     # Commit data to persistent storage
