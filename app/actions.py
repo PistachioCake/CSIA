@@ -35,3 +35,21 @@ def add_school(competition, name, no_of_teams):
         db.session.add(team)
     # Commit data to persistent storage
     db.session.commit()
+
+def get_school(**kwargs):
+    return models.School.query.filter_by(**kwargs).first()
+
+def change_school_name(school, name):
+    old_name = school.name
+    school.name = name
+    name += " "
+    for team in school.teams:
+        team.name = name + team.name.split()[-1]
+    db.session.commit()
+
+def remove_school(school):
+    for team in school.teams:
+        remove_team(team)
+    db.session.delete(school)
+    db.session.commit()
+    

@@ -13,7 +13,7 @@
 			{{ team.password }}
 		</td>
 		<td>
-			<button class="btn btn-warning btn-sm" type="button" data-toggle="modal" data-target="#editModal" data-teamid="{{ team.id }}" data-teamname="{{ team.name }}" data-teampassword="{{ team.password }}">Edit</button>
+			<button class="btn btn-warning btn-sm" type="button" data-toggle="modal" data-target="#editTeamModal" data-teamid="{{ team.id }}" data-teamname="{{ team.name }}" data-teampassword="{{ team.password }}">Edit</button>
 		</td>
 	</tr>
 {% endmacro %}
@@ -24,8 +24,11 @@
 			<div class="row">
 				<div class="col-md-9 col-12">{{ school.name }}</div>
 				<div class="col">{{ school.teams.all()|length }}</div>
-				<!-- TODO: Make this toggle to a v or something when open -->
-				<div class="col"><button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#{{ 'collapsible' + school.name|replace(' ', '_') }}" aria-expanded="false" aria-controls="{{ school.name + 'collapsible' }}">&lt;</button></div>
+				<div class="col">
+					<!-- TODO: Make this toggle to "hide" or something when open -->
+					<button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#{{ 'collapsible' + school.name|replace(' ', '_') }}" aria-expanded="false" aria-controls="{{ school.name + 'collapsible' }}">Show</button>
+					<button class="btn btn-warning btn-sm" type="button" data-toggle="modal" data-target="#editSchoolModal" data-schoolid="{{ school.id }}" data-schoolname="{{ school.name }}">Edit</button>
+				</div>
 			</div>
 		</div>
 		<div class="collapse collapsibleSchool" id="{{ 'collapsible' + school.name|replace(' ', '_') }}">
@@ -64,7 +67,7 @@
 			{{ wtf.form_field(add_school_form.no_of_teams, form_type="inline", placeholder="#") }}
 		</div>
 		<div class="col">
-			{{ wtf.form_field(add_school_form.submit_school, form_type="inline", extra_class="btn-block") }}
+			{{ wtf.form_field(add_school_form.submit_new_school, form_type="inline", extra_class="btn-block") }}
 		</div>
 	</div>
 </form>
@@ -85,11 +88,11 @@
 {{ render_school(school) }}
 {% endfor %}
 
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+<div class="modal fade" id="editTeamModal" tabindex="-1" role="dialog" aria-labelledby="editTeamModalLabel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="editModalLabel">Edit Team</h5>
+				<h5 class="modal-title" id="editTeamModalLabel">Edit Team</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -101,8 +104,32 @@
 					<div class="form-group">
 						{{ wtf.form_field(edit_team_form.team_name) }} 
 						{{ wtf.form_field(edit_team_form.password, placeholder="Password") }}
-						{{ wtf.form_field(edit_team_form.submit_password) }}
-						{{ wtf.form_field(edit_team_form.submit_delete, class="btn btn-danger") }}
+						{{ wtf.form_field(edit_team_form.submit_team) }}
+						{{ wtf.form_field(edit_team_form.delete_team, class="btn btn-danger") }}
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="editSchoolModal" tabindex="-1" role="dialog" aria-labelledby="editSchoolModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="editSchoolModalLabel">Edit School</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form class="form" method="POST">
+					{{ edit_school_form.hidden_tag() }}
+					{{ edit_school_form.school_id(type="hidden") }}
+					<div class="form-group">
+						{{ wtf.form_field(edit_school_form.school_name) }} 
+						{{ wtf.form_field(edit_school_form.submit_school) }}
+						{{ wtf.form_field(edit_school_form.delete_school, class="btn btn-danger") }}
 					</div>
 				</form>
 			</div>
@@ -115,7 +142,7 @@
 {% block scripts %}
 {{ super() }}
 <script>
-	$('#editModal').on('show.bs.modal', function (event) {
+	$('#editTeamModal').on('show.bs.modal', function (event) {
 		var modal = $(this)
 		var button = $(event.relatedTarget) // Button that triggered the modal
 		// Populate the modal itself
@@ -126,6 +153,17 @@
 		modal.find('#team-id').val(teamid)
 		modal.find('#team-name').val(teamname)
 		modal.find('#team-password').val(teampassword)
+	})
+
+	$('#editSchoolModal').on('show.bs.modal', function (event) {
+		var modal = $(this)
+		var button = $(event.relatedTarget) // Button that triggered the modal
+		// Populate the modal itself
+		var schoolid = button.data('schoolid')
+		var schoolname = button.data('schoolname')
+		modal.find('.modal-title').text('Edit School "' + schoolname + '"')
+		modal.find('#school-id').val(schoolid)
+		modal.find('#school-name').val(schoolname)
 	})
 </script>
 {% endblock %}

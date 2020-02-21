@@ -6,15 +6,21 @@ from wtforms_components import read_only
 class SchoolForm(FlaskForm):
     school_name = StringField('School name', validators=[DataRequired()])
     no_of_teams = IntegerField('Number of Teams', validators=[DataRequired()])
-    submit_school = SubmitField('Add School')
+    submit_new_school = SubmitField('Add School')
     
 class EditTeamForm(FlaskForm):
     team_id = IntegerField('Team ID', id="team-id", validators=[DataRequired()])
     team_name = StringField('Team Name', id="team-name") # Should only be used to display stuff, not as an actual input mechanism
     password = StringField('Password', id="team-password", validators=[DataRequired(), Length(min=5)])
-    submit_password = SubmitField('Update Team', default="update")
-    submit_delete = SubmitField('Delete Team', default="delete")
+    submit_team = SubmitField('Update Team', default="team-update")
+    delete_team = SubmitField('Delete Team', default="team-delete")
 
     def __init__(self, *args, **kwargs):
         super(EditTeamForm, self).__init__(*args, **kwargs)
         read_only(self.team_name)
+
+class EditSchoolForm(FlaskForm):
+    school_id = IntegerField('School ID', id="school-id", validators=[DataRequired()])
+    school_name = StringField('School Name', id="school-name")
+    submit_school = SubmitField('Update School', default="school-update")
+    delete_school = SubmitField('Delete School', default="school-delete")
