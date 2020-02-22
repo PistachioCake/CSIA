@@ -1,0 +1,45 @@
+<div class="card">
+	<div class="card-header">
+		<div class="row">
+			<div class="col-md-9 col-12">{{ school.name }}</div>
+			<div class="col">{{ school.teams.all()|length }}</div>
+			<div class="col">
+				<!-- TODO: Make this toggle to "hide" or something when open -->
+				<button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#{{ 'collapsible' + school.name|replace(' ', '_') }}" aria-expanded="false" aria-controls="{{ school.name + 'collapsible' }}">Show</button>
+				<button class="btn btn-warning btn-sm" type="button" data-toggle="modal" data-target="#editSchoolModal" data-schoolid="{{ school.id }}" data-schoolname="{{ school.name }}">Edit</button>
+			</div>
+		</div>
+	</div>
+	<div class="collapse collapsibleSchool" id="{{ 'collapsible' + school.name|replace(' ', '_') }}">
+		<div class="card-body">
+			<table class="table">
+				<thead>
+					<tr>
+						<th class="col-3">Team Name</th>
+						<th class="col-3 d-none d-sm-table-cell">Account Name</th>
+						<th class="col-3">Password</th>
+						<th class="col-3">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for team in school.teams.all() %}
+                	<tr>
+                		<td>
+                			{{ team.name }}
+                		</td>
+                		<td class="d-none d-sm-table-cell">
+                			---
+                		</td>
+                		<td>
+                			{{ team.password }}
+                		</td>
+                		<td>
+                			<button class="btn btn-warning btn-sm" type="button" data-toggle="modal" data-target="#editTeamModal" data-teamid="{{ team.id }}" data-teamname="{{ team.name }}" data-teampassword="{{ team.password }}">Edit</button>
+                        </td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
