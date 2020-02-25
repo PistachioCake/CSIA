@@ -1,6 +1,46 @@
 {% extends "base.html" %}
 
+{% block body_attribs %} style="padding-top: 3.5rem"{% endblock %}
+
+{% set container = False %} {# in order to prevent <main> from constricting the viewport of the jumbotron #}
+
 {% block app_content %}
-	<h1>CSIA</h1>
+<div class="jumbotron">
+	<div class="container">
+		<h1 class="display-3">Welcome</h1>
+		<p class="lead">
+			This program, created by Rushil Udani, helps organize the teams for the hands-on portion of a UIL CS competition. 
+			Click on &OpenCurlyDoubleQuote;Teams&CloseCurlyDoubleQuote; to view/edit the teams involved. 
+		</p>
+	</div>
+</div>
+
+<div class="container">
+	<div class="card-deck">
+		<div class="card">
+			<div class="card-body">
+				<h2 class="card-title">Teams</h2>
+				<p class="card-text">There are {{ school_count }} schools and {{ team_count }} teams.</p>
+				<a href="{{ url_for('teams') }}" class="btn btn-primary btn-block">Edit</a>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<h2 class="card-title">Admins</h2>
+				<p class="card-text">There are no admins yet.</p>
+				<a href="{{ url_for('admins') }}" class="btn btn-primary btn-block">Edit</a>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<h2 class="card-title">Export</h2>
+				<button class="btn btn-secondary btn-block">Export PDF</button>
+				<button class="btn btn-secondary btn-block">Export PC^2 file</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 {% endblock %}
 
