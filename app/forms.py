@@ -24,3 +24,4 @@ class EditSchoolForm(FlaskForm):
     school_name = StringField('School Name', id="school-name")
     submit_school = SubmitField('Update School', default="school-update")
     delete_school = SubmitField('Delete School', default="school-delete")
+    add_team_to_school = SubmitField('Add Team to School', default="add-team") # Should this be in its own form?

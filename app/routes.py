@@ -43,9 +43,15 @@ def teams():
             actions.change_school_name(school, edit_school_form.school_name.data)
 
     if edit_school_form.delete_school.data and edit_school_form.is_submitted():
-            school = actions.get_school(id=edit_school_form.school_id.data)
-            flash(f'School {school.name} deleted.')
-            actions.remove_school(school)
+        school = actions.get_school(id=edit_school_form.school_id.data)
+        flash(f'School {school.name} deleted.')
+        actions.remove_school(school)
+
+    if edit_school_form.add_team_to_school.data and edit_school_form.is_submitted():
+        print(edit_school_form.data)
+        school = actions.get_school(id=edit_school_form.school_id.data)
+        flash(f'Added a team to {school.name}.')
+        actions.add_team(school)
 
         
     return render_template("teams.html", title="Teams", 
