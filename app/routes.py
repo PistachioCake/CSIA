@@ -7,11 +7,12 @@ from app import actions
 @app.route('/index')
 def index():
     comp1 = actions.get_or_make_competition(name="comp1")
-    schools = actions.get_schools(competition=comp1)
+    # schools = actions.get_schools(competition=comp1)
+    schools = comp1.schools.all()
     school_count = len(schools)
     team_count = 0
     for school in schools:
-        team_count += len(actions.get_teams(school=school))
+        team_count += len(school.teams.all())
     # db.session.query(Team).filter(Team.school.in_(schools)).count()
     return render_template("index.html", title="Home", school_count=school_count, team_count=team_count)
 
