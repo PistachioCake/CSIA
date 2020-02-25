@@ -4,7 +4,7 @@ from random import choice
 
 # Should this be handled in a better way? Dynamically looked up or something?
 with open('passwords.txt', 'r') as password_file:
-    passwords = [password for password in password_file]
+    passwords = [password.strip() for password in password_file]
 
 def get_competition(**kwargs):
     return models.Competition.query.filter_by(**kwargs).first()
@@ -28,6 +28,9 @@ def add_team(school, name, password=None, commit=True):
 def get_team(**kwargs):
     return models.Team.query.filter_by(**kwargs).first()
 
+def get_teams(**kwargs):
+    return models.Team.query.filter_by(**kwargs).all()
+
 def change_team_password(team, new_password=None):
     if not new_password:
         new_password = choice(passwords)
@@ -50,6 +53,9 @@ def add_school(competition, name, no_of_teams):
 
 def get_school(**kwargs):
     return models.School.query.filter_by(**kwargs).first()
+
+def get_schools(**kwargs):
+    return models.School.query.filter_by(**kwargs).all()
 
 def change_school_name(school, name):
     old_name = school.name
