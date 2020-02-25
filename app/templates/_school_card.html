@@ -40,6 +40,10 @@
 					{% endfor %}
 				</tbody>
 			</table>
+			<form class="form form-group" method="POST">
+				{{ edit_school_form.school_id(type="hidden", value=school.id) }}
+				{{ edit_school_form.add_team_to_school(class="btn btn-primary btn-block") }}
+			</form>
 		</div>
 	</div>
 </div>
