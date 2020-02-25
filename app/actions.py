@@ -1,6 +1,7 @@
 from app import db
 import app.models as models
 from random import choice
+import csv
 
 # Should this be handled in a better way? Dynamically looked up or something?
 with open('passwords.txt', 'r') as password_file:
@@ -99,8 +100,48 @@ def change_team_password(team, new_password=None):
     team.password = new_password
 
 @commit_optional
+def lock_team(team, account_num):
+    team.account_num = account_num
+    team.locked = True
+
+@commit_optional
 def remove_team(team, reorganize=True):
     db.session.delete(team)
     if reorganize:
         reorganize_school(team.school)
+
+# =========
+# Exports follow
+# =========
+
+def create_row(team, account_num, row=None):
+    lock_team(team, account_num)
+    if not row:
+        row = dict()
+    row['account'] = 'team' + str(team.account_num)
+    row['displayname'] = team.name
+    row['password'] = team.password
+    return row
+
+
+def make_csv(competition, file):
+    header = ['site', 'account', 'displayname', 'password', 'group', 'permdisplay', 'permlogin', 'externalid', 'alias', 'permpassword']
+    default = {
+        'site': '1',
+        'group': 'TRUE',
+        'permdisplay': 'TRUE',
+        'permlogin': '',
+        'externalid': '',
+        'alias': '',
+        'permpassword': '',
+    }
+    writer = csv.DictWriter(file, fieldnames=header, dialect='excel-tab')
+
+    writer.writeheader()
+    account_num = 1
+    for school in competition.schools:
+        for team in school.teams:
+            row = create_row(team, account_num, default)
+            writer.writerow(row)
+            account_num += 1
 
