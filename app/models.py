@@ -25,7 +25,6 @@ class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     team_num = db.Column(db.Integer, index=True, nullable=False)
     account_num = db.Column(db.Integer, index=True, nullable=True) # Should be null until locked == True
-    # TODO Is this bad database design?
     password = db.Column(db.String(64))
     locked = db.Column(db.Boolean, default=False, nullable=False)
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'))

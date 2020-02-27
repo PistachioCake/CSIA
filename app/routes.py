@@ -1,7 +1,9 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, send_file
 from app import app
-from app.forms import SchoolForm, EditTeamForm, EditSchoolForm
+from app.forms import SchoolForm, EditTeamForm, EditSchoolForm, AddTeamForm
 from app import actions
+
+from os import path
 
 @app.route('/')
 @app.route('/index')
@@ -55,19 +57,31 @@ def teams():
         flash(f'School {school.name} deleted.')
         actions.remove_school(school)
 
-    if edit_school_form.add_team_to_school.data and edit_school_form.is_submitted():
-        print(edit_school_form.data)
-        school = actions.get_school(id=edit_school_form.school_id.data)
-        flash(f'Added a team to {school.name}.')
-        actions.add_team(school)
+    # For the add team form
+    add_team_form = AddTeamForm()
 
+    if add_team_form.add_team_to_school.data and add_team_form.is_submitted():
+        school = actions.get_school(id=add_team_form.school_id.data)
+        for _ in range(add_team_form.no_of_teams.data):
+            actions.add_team(school)
+        flash(f'Added {add_team_form.no_of_teams.data} team(s) to {school.name}.')
         
     return render_template("teams.html", title="Teams", 
         competition=comp1, 
         add_school_form=add_school_form, 
         edit_team_form=edit_team_form, 
-        edit_school_form=edit_school_form)
+        edit_school_form=edit_school_form, 
+        add_team_form=add_team_form, 
+        get_teams=actions.get_teams)
 
 @app.route('/admins')
 def admins():
     return render_template("admins.html", title="Admins", page_name="Admins")
+
+@app.route('/export')
+def export_csv():
+    comp1 = actions.get_or_make_competition(name='comp1')
+    p = path.join(app.config['FILE_DIRECTORY'], 'teams.csv')
+    with open(p, 'w') as f:
+        actions.make_csv(comp1, f)
+    return send_file(p, mimetype='text/csv', as_attachment=True, attachment_filename='teams.csv')

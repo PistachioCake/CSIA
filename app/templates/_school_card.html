@@ -22,27 +22,33 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for team in school.teams.all() %}
-                	<tr>
-                		<td>
-                			{{ team.name }}
-                		</td>
-                		<td class="d-none d-sm-table-cell">
-                			---
-                		</td>
-                		<td>
-                			{{ team.password }}
-                		</td>
-                		<td>
-                			<button class="btn btn-warning btn-sm" type="button" data-toggle="modal" data-target="#editTeamModal" data-teamid="{{ team.id }}" data-teamname="{{ team.name }}" data-teampassword="{{ team.password }}">Edit</button>
-                        </td>
+					{% for team in get_teams(school=school) %}
+					<tr{% if team.locked %} class="table-secondary"{% endif %}>
+						<td>
+							{{ team.name }}
+						</td>
+						<td class="d-none d-sm-table-cell">
+							{% if team.locked %}team{{ team.account_num }}{% else %}---{% endif %}
+						</td>
+						<td>
+							{{ team.password }}
+						</td>
+						<td>
+							<button class="btn btn-warning btn-sm" type="button" data-toggle="modal" data-target="#editTeamModal" data-teamid="{{ team.id }}" data-teamname="{{ team.name }}" data-teampassword="{{ team.password }}">Edit</button>
+						</td>
 					</tr>
 					{% endfor %}
 				</tbody>
 			</table>
 			<form class="form form-group" method="POST">
-				{{ edit_school_form.school_id(type="hidden", value=school.id) }}
-				{{ edit_school_form.add_team_to_school(class="btn btn-primary btn-block") }}
+				{{ add_team_form.school_id(type="hidden", value=school.id) }}
+				<div class="row">
+					<div class="col col-md-4">
+						{{ add_team_form.no_of_teams(class="form-control") }}
+					</div>
+					<div class="col col-md-8">
+						{{ add_team_form.add_team_to_school(class="btn btn-primary btn-block") }}
+					</div>
 			</form>
 		</div>
 	</div>

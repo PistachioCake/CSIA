@@ -53,13 +53,13 @@ def change_school_name(school, name):
 
 @commit_optional
 def reorganize_school(school):
-    locked = map(lambda t: t.team_num, school.teams.filter_by(locked=True))
-    team_num = 1
+    locked = [t.team_num for t in school.teams.filter_by(locked=True)]
+    team_num = 0
     for team in school.teams.filter_by(locked=False):
+        team_num += 1
         while team_num in locked:
             team_num += 1
         team.team_num = team_num
-        team_num += 1
 
 @commit_optional
 def remove_school(school):
@@ -76,7 +76,7 @@ def add_team(school, team_num=None, password=None, reorganize=True):
             team_num = 256
             # Take a shortcut here that we will rectify later
         else:
-            team_nums = map(lambda t: t.team_num, school.teams)
+            team_nums = [t.team_num for t in school.teams]
             team_num = 1
             while team_num in team_nums:
                 team_num += 1
@@ -91,7 +91,9 @@ def get_team(**kwargs):
     return models.Team.query.filter_by(**kwargs).first()
 
 def get_teams(**kwargs):
-    return models.Team.query.filter_by(**kwargs).all()
+    return models.Team.query.filter_by(**kwargs).order_by(
+                # models.Team.locked.desc(),
+                models.Team.team_num).all()
 
 @commit_optional
 def change_team_password(team, new_password=None):
@@ -115,7 +117,6 @@ def remove_team(team, reorganize=True):
 # =========
 
 def create_row(team, account_num, row=None):
-    lock_team(team, account_num)
     if not row:
         row = dict()
     row['account'] = 'team' + str(team.account_num)
@@ -125,7 +126,8 @@ def create_row(team, account_num, row=None):
 
 
 def make_csv(competition, file):
-    header = ['site', 'account', 'displayname', 'password', 'group', 'permdisplay', 'permlogin', 'externalid', 'alias', 'permpassword']
+    locked = [t.account_num for s in competition.schools for t in s.teams.filter_by(locked=True)]
+    fieldnames = ['site', 'account', 'displayname', 'password', 'group', 'permdisplay', 'permlogin', 'externalid', 'alias', 'permpassword']
     default = {
         'site': '1',
         'group': 'TRUE',
@@ -135,13 +137,18 @@ def make_csv(competition, file):
         'alias': '',
         'permpassword': '',
     }
-    writer = csv.DictWriter(file, fieldnames=header, dialect='excel-tab')
+    writer = csv.DictWriter(file, fieldnames=fieldnames, dialect='excel-tab', lineterminator='\n')
 
     writer.writeheader()
-    account_num = 1
+    account_num = 0
     for school in competition.schools:
         for team in school.teams:
+            if not team.locked:     # Don't change locked teams
+                account_num += 1
+                while account_num in locked:
+                    account_num += 1
+                lock_team(team, account_num)
+
             row = create_row(team, account_num, default)
             writer.writerow(row)
-            account_num += 1
 
