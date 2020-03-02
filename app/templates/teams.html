@@ -25,8 +25,8 @@
 			<div class="col-md-9 col-12">School Name</div>
 			<div class="col">#</div>
 			<div class="col">
-				<button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target=".collapsibleSchool.show" aria-controls="hideCollapsibleSchool">Hide</button>
-				<button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target=".collapsibleSchool:not(.show)" aria-controls="showCollapsibleSchool">Show</button>
+				<button class="btn btn-primary btn-sm toggle-all" type="button" data-toggle="Hide" aria-controls="hideCollapsibleSchool">Hide</button>
+				<button class="btn btn-primary btn-sm toggle-all" type="button" data-toggle="Show" aria-controls="showCollapsibleSchool">Show</button>
 			</div>
 		</div>
 	</div>
@@ -112,5 +112,28 @@
 		modal.find('#school-id').val(schoolid)
 		modal.find('#school-name').val(schoolname)
 	})
+
+	$('.toggle-text').click(function() {
+		var button = $(this);
+		button.toggleClass('active');
+		if (button.hasClass('active')) {
+			button.text('Hide');
+		} else {
+			button.text('Show');
+		}
+	});
+
+	$('.toggle-all').click(function() {
+		var button = $(this);
+		var additional_class; // Decide which buttons to click
+		if (button.data('toggle') == 'Hide') {
+			additional_class = '.active';
+		} else if (button.data('toggle') == 'Show') {
+			additional_class = ':not(.active)';
+		}
+		var buttons = $('.toggle-text' + additional_class);
+		buttons.click();
+	});
+
 </script>
 {% endblock %}

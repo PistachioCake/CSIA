@@ -5,7 +5,7 @@
 			<div class="col">{{ school.teams.all()|length }}</div>
 			<div class="col">
 				<!-- TODO: Make this toggle to "hide" or something when open -->
-				<button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#{{ 'collapsible' + school.name|replace(' ', '_') }}" aria-expanded="false" aria-controls="{{ school.name + 'collapsible' }}">Show</button>
+				<button class="btn btn-primary btn-sm toggle-text" type="button" data-toggle="collapse" data-target="#{{ 'collapsible' + school.name|replace(' ', '_') }}" aria-expanded="false" aria-controls="{{ school.name + 'collapsible' }}">Show</button>
 				<button class="btn btn-warning btn-sm" type="button" data-toggle="modal" data-target="#editSchoolModal" data-schoolid="{{ school.id }}" data-schoolname="{{ school.name }}">Edit</button>
 			</div>
 		</div>
