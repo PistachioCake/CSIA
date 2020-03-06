@@ -3,6 +3,9 @@ from wtforms import StringField, IntegerField, SubmitField, HiddenField
 from wtforms.validators import DataRequired, Length
 from wtforms_components import read_only
 
+class DeleteAllSchoolsForm(FlaskForm):
+    delete_all_schools = SubmitField('Delete All Schools')
+
 class SchoolForm(FlaskForm):
     school_name = StringField('School name', validators=[DataRequired()])
     no_of_teams = IntegerField('Number of Teams', validators=[DataRequired()])

@@ -14,7 +14,7 @@
 			{{ wtf.form_field(add_school_form.no_of_teams, form_type="inline", placeholder="#") }}
 		</div>
 		<div class="col">
-			{{ wtf.form_field(add_school_form.submit_new_school, form_type="inline", extra_classes="btn-block") }}
+			{{ wtf.form_field(add_school_form.submit_new_school, form_type="inline", class="btn btn-primary btn-block") }}
 		</div>
 	</div>
 </form>
@@ -34,6 +34,12 @@
 {% for school in competition.schools.all() %}
 {% include '_school_card.html' %}
 {% endfor %}
+
+<form class="form mt-2" method="POST">
+	{{ delete_all_schools_form.hidden_tag() }}
+	{{ wtf.form_field(delete_all_schools_form.delete_all_schools, class="btn btn-danger btn-block") }}
+</form>
+
 
 <div class="modal fade" id="editTeamModal" tabindex="-1" role="dialog" aria-labelledby="editTeamModalLabel" aria-hidden="true">
 	<div class="modal-dialog" role="document">

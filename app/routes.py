@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, send_file
 from app import app
-from app.forms import SchoolForm, EditTeamForm, EditSchoolForm, AddTeamForm
+from app.forms import SchoolForm, EditTeamForm, EditSchoolForm, AddTeamForm, DeleteAllSchoolsForm
 from app import actions
 
 from os import path
@@ -21,6 +21,14 @@ def index():
 @app.route('/teams', methods=['GET', 'POST'])
 def teams():
     comp1 = actions.get_or_make_competition(name="comp1")
+
+    # For the delete all schools form
+    delete_all_schools_form = DeleteAllSchoolsForm()
+
+    if delete_all_schools_form.delete_all_schools.data and delete_all_schools_form.is_submitted():
+        for school in comp1.schools:
+            actions.remove_school(school)
+        flash(f'Delted all schools.')
 
     # For the add school form:
     add_school_form = SchoolForm()
@@ -72,7 +80,9 @@ def teams():
         edit_team_form=edit_team_form, 
         edit_school_form=edit_school_form, 
         add_team_form=add_team_form, 
-        get_teams=actions.get_teams)
+        get_teams=actions.get_teams,
+        delete_all_schools_form=delete_all_schools_form,
+        )
 
 @app.route('/admins')
 def admins():
