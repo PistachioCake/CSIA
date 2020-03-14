@@ -22,7 +22,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for team in get_teams(school=school) %}
+					{% for team in get_teams(school=school) %} {# See if there is a way to do this without get_teams #}
 					<tr{% if team.locked %} class="table-secondary"{% endif %}>
 						<td>
 							{{ team.name }}
@@ -43,10 +43,16 @@
 			<form class="form form-group" method="POST">
 				{{ add_team_form.school_id(type="hidden", value=school.id) }}
 				<div class="row">
-					<div class="col col-md-4">
-						{{ add_team_form.no_of_teams(class="form-control") }}
+					<div class="col col-md-8 input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Add</span>
+						</div>
+							{{ add_team_form.no_of_teams(class="form-control") }}
+						<div class="input-group-append">
+							<span class="input-group-text">Team(s) to school</span>
+						</div>
 					</div>
-					<div class="col col-md-8">
+					<div class="col col-md-4">
 						{{ add_team_form.add_team_to_school(class="btn btn-primary btn-block") }}
 					</div>
 				</div>

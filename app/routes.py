@@ -28,16 +28,21 @@ def teams():
     if delete_all_schools_form.delete_all_schools.data and delete_all_schools_form.is_submitted():
         for school in comp1.schools:
             actions.remove_school(school)
-        flash(f'Delted all schools.')
+        flash(f'Deleted all schools.')
 
     # For the add school form:
     add_school_form = SchoolForm()
+
     if add_school_form.submit_new_school.data and add_school_form.validate_on_submit():
-        flash(f'School inputted: School name {add_school_form.school_name.data}, with {add_school_form.no_of_teams.data} teams.')
-        actions.add_school(comp1, add_school_form.school_name.data, add_school_form.no_of_teams.data)
+        added = actions.add_school(comp1, add_school_form.school_name.data, add_school_form.no_of_teams.data)
+        if added: 
+            flash(f'School inputted: School name {add_school_form.school_name.data}, with {add_school_form.no_of_teams.data} teams.')
+        else:
+            flash(f'Unable to add school {add_school_form.school_name.data}: School already exists.')
     
     # For the edit team form
     edit_team_form = EditTeamForm()
+
     if edit_team_form.submit_team.data and edit_team_form.is_submitted():
         if edit_team_form.validate():
             team = actions.get_team(id=edit_team_form.team_id.data)
@@ -54,6 +59,7 @@ def teams():
 
     # For the edit school form
     edit_school_form = EditSchoolForm()
+
     if edit_school_form.submit_school.data and edit_school_form.is_submitted():
         if edit_school_form.validate():
             school = actions.get_school(id=edit_school_form.school_id.data)
@@ -80,8 +86,8 @@ def teams():
         edit_team_form=edit_team_form, 
         edit_school_form=edit_school_form, 
         add_team_form=add_team_form, 
-        get_teams=actions.get_teams,
         delete_all_schools_form=delete_all_schools_form,
+        get_teams=actions.get_teams
         )
 
 @app.route('/admins')

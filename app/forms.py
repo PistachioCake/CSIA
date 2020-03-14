@@ -31,4 +31,4 @@ class EditSchoolForm(FlaskForm):
 class AddTeamForm(FlaskForm):
     school_id = IntegerField('School ID', id='school-id', validators=[DataRequired()])
     no_of_teams = IntegerField('Number of Teams', default='1')
-    add_team_to_school = SubmitField('Add Team to School', default='add-team') # Should this be in its own form?
+    add_team_to_school = SubmitField('Add', default='add-team') # Should this be in its own form?

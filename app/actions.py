@@ -29,12 +29,17 @@ def get_or_make_competition(**kwargs):
 
 @commit_optional
 def add_school(competition, name, no_of_teams):
+    prev = competition.schools.filter_by(name=name).first()
+    if prev is not None:
+        return False    # Don't overwrite a school that exists already
+                        # TODO: Decide if there is a better way to do this
     # Create a school associated with the competition
     school = models.School(name=name, competition=competition)
     # Add this school to the database
     db.session.add(school)
     for i in range(no_of_teams):
         add_team(school, i+1, commit=False)
+    return True
 
 def get_school(**kwargs):
     return models.School.query.filter_by(**kwargs).first()
@@ -72,14 +77,9 @@ def add_team(school, team_num=None, password=None, reorganize=True):
     if not password:
         password = choice(passwords)
     if not team_num:
-        if reorganize:
-            team_num = 256
-            # Take a shortcut here that we will rectify later
-        else:
-            team_nums = [t.team_num for t in school.teams]
-            team_num = 1
-            while team_num in team_nums:
-                team_num += 1
+        team_nums = [t.team_num for t in school.teams]
+        team_num = 1
+        while team_num in team_nums:
             team_num += 1
     
     team = models.Team(team_num=team_num, password=password, school=school)
